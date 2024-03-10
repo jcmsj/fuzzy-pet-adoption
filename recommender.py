@@ -61,14 +61,14 @@ PET_DATA:dict[str, dict[Criteria,float]] = {
         Criteria.INDEPENDENCE: 0.6, # moderate attention
         Criteria.LIVING_SPACE: 0.65, # medium
         Criteria.ENVIRONMENT_PREFERENCE: 0.75, # either
-        Criteria.PET_CARE: 0.6, # high
+        Criteria.PET_CARE: 0.6, # Moderate
     },
     "rabbit": {
         Criteria.ENERGY_LEVEL: 0.4, # active
         Criteria.INDEPENDENCE: 0.6, # moderate attention
         Criteria.LIVING_SPACE: 0.25, # small
         Criteria.ENVIRONMENT_PREFERENCE: 0.4, # either
-        Criteria.PET_CARE: 0.7, # moderate
+        Criteria.PET_CARE: 0.7, # High
     },
 }
 
