@@ -107,11 +107,13 @@ def calculate_suitability_score(adopter_preferences:dict[Criteria, str], pet:dic
         for category, interval in membership_fx.items():
             if preference == category:
                 min_val, max_val = interval
-                break
-        pet_value = pet[criterion]
-        if pet_value >= min_val and pet_value <= max_val:
-            score += 1
+                pet_value = pet[criterion]
+                if pet_value >= min_val and pet_value <= max_val:
+                    score += 1
     return round(score/len(adopter_preferences), decimal_places_accuracy)
+
+def calc_all_pet_suitability(situation:dict[Criteria, str]):
+    return { pet: calculate_suitability_score(situation, PET_DATA[pet]) for pet in PET_DATA }
 
 def main():
     '''Run if main module'''
@@ -136,10 +138,10 @@ def main():
 
     # Recommendation
     print(f"\nSearching knowledge base...")
-    
-    recommendation = max(PET_DATA, key=lambda pet: calculate_suitability_score(adopter_preference, PET_DATA[pet]))
+    suitability = calc_all_pet_suitability(adopter_preference)
+    recommendation = max(suitability, key=lambda pet: suitability[pet])
     print(f"Recommended Pet: {recommendation}")
-    print_suitability(recommendation, adopter_preference)
+    print_suitability(suitability[recommendation])
 
     # Show Pet Criteria
     print(f"A {recommendation} has the following characteristics:")
@@ -150,14 +152,36 @@ def main():
     for pet in PET_DATA:
         if pet != recommendation:
             print(f"{pet}:")
-            print_suitability(pet, adopter_preference)
+            print_suitability(suitability[pet])
             show_pet_criteria(pet)
             print("\n")
 
-def print_suitability(pet:str, adopter_preference:dict[Criteria, str]):
-    print(f"Suitability: {calculate_suitability_score(adopter_preference, PET_DATA[pet])*100}%")
+    # Bargraph prompt
+    ans = input("Do you want to see a bargraph of the suitability scores? (Y/N): ")
+    if ans.lower() == "y":
+        show_bargraph(suitability)
+ 
+def show_bargraph(suitability:dict[str, float]):
+    import pandas as pd
+    import matplotlib.pyplot as plt
+       #  Create a bargraph whose dict key is the x axis and dict value as y-axis
+    df = pd.DataFrame(suitability.items(), columns=['pet', 'suitability'])
+    df.plot(
+        kind='bar', 
+        x='pet', 
+        y='suitability', 
+        xlabel='Pet',
+        ylabel='Suitability Score', 
+        title='Bargraph of Pet Suitability'
+    )
+    plt.show()
+
+def print_suitability(n:float):
+    print(f"Suitability: {n*100}%")
+
 def show_pet_criteria(pet:str):
     for criterion, value in PET_DATA[pet].items():
         print(f"{criterion.name.replace('_',' ').title()}: {fuzzify(criterion, value).title()} ({value})")
+
 if __name__ == '__main__':
     main()

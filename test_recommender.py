@@ -1,13 +1,12 @@
 # Tests that a pet is recommended based on the criteria
 
-from recommender import calculate_suitability_score, Criteria, PET_DATA
+from recommender import calc_all_pet_suitability, calculate_suitability_score, Criteria, PET_DATA
 #  Create test cases for the ff adopters:
 # a. Couple looking for a pet - Both working fulltime in small apartment.
 # b. Outdoor Person -  Enjoys hiking and camping. They want a furry companion that is energetic, adventurous, and good with outdoor activities.
 # c. Allergy-Sensitive Individual - An individual with allergies is interested in adopting a hypoallergenic pet. They are looking for a pet that sheds minimally, requires little grooming, and is known to be less allergenic.
 
-def calc_all_pet_suitability(situation:dict[Criteria, str]):
-    return { pet: calculate_suitability_score(situation, PET_DATA[pet]) for pet in PET_DATA }
+
 
 def test_recommends_cat_for_couple():
     couple_situation:dict[Criteria, str] = {
@@ -19,7 +18,6 @@ def test_recommends_cat_for_couple():
     }
     scores = calc_all_pet_suitability(couple_situation)
 
-    # print(scores)
     # Check if cat is recommended
     assert scores["cat"] > scores["dog"], "Cat should be recommended over dog"
     assert scores["cat"] > scores["rabbit"], "Cat should be recommended over rabbit"
