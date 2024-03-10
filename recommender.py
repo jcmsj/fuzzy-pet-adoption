@@ -1,17 +1,12 @@
 # A pet recommender system that uses fuzzy logic to recommend a pet based on the adopter's preferences and a pet's characteristics.
-
-# Based on the circumstances originally given,the following criteria are used to recommend a pet:
-# 1. Energy Level
-# 2. Independence
-# 3. Living Space
-# 4. Environment Preference
-# 5. Pet Care
-#  Use the following membership functions for each of the criteria:
-
-# A given category has an exclusive interval, meaning:
-# "category": [inclusive min, exclusive max]
 import enum
 
+# Given Scenarios:
+# a. Couple looking for a pet - Both working fulltime in small apartment.
+# b. Outdoor Person -  Enjoys hiking and camping. They want a furry companion that is energetic, adventurous, and good with outdoor activities.
+# c. Allergy-Sensitive Individual - An individual with allergies is interested in adopting a hypoallergenic pet. They are looking for a pet that sheds minimally, requires little grooming, and is known to be less allergenic.
+
+# Based on the circumstances above,the following criteria are used to recommend a pet:
 class Criteria(enum.Enum):
     ENERGY_LEVEL = 0
     INDEPENDENCE = 1
@@ -19,6 +14,9 @@ class Criteria(enum.Enum):
     ENVIRONMENT_PREFERENCE = 3
     PET_CARE = 4
 
+#  Use the following membership functions for each of the criteria:
+# A given category has an exclusive interval, meaning:
+# "category": [inclusive min, exclusive max]
 MEMBERSHIP_FX: dict[Criteria, dict[str, tuple[float, float]]] = {
     Criteria.ENERGY_LEVEL: {
         "Very Inactive": (0,0.2),
@@ -73,9 +71,6 @@ PET_DATA:dict[str, dict[Criteria,float]] = {
         Criteria.PET_CARE: 0.7, # moderate
     },
 }
-# a. Couple looking for a pet - Both working fulltime in small apartment.
-# b. Outdoor Person -  Enjoys hiking and camping. They want a furry companion that is energetic, adventurous, and good with outdoor activities.
-# c. Allergy-Sensitive Individual - An individual with allergies is interested in adopting a hypoallergenic pet. They are looking for a pet that sheds minimally, requires little grooming, and is known to be less allergenic.
 
 def curried_ask_criteria(prompt:str, scale:float):
     if scale <= 0:
