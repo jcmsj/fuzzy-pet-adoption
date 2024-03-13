@@ -87,6 +87,7 @@ def curried_ask_criteria(prompt:str, scale:float):
             return ask_criteria()
     return ask_criteria
 
+# Prepare functions to getting user input for criteria
 ask_energy_level = curried_ask_criteria("From a scale of 1 to 10, how active do you want your pet to be?\n(1 to 10): ", 10)
 HOURS_PER_DAY  = 24
 ask_away_time = curried_ask_criteria("In a day, how many hours are you usually away from home?\n(0 to 24): ", HOURS_PER_DAY)
@@ -103,13 +104,11 @@ def fuzzify(key:Criteria, value:float) -> str:
 def calculate_suitability_score(adopter_preferences:dict[Criteria, str], pet:dict[Criteria, float], decimal_places_accuracy:int=2) -> float:
     score = 0
     for criterion, preference in adopter_preferences.items():
-        membership_fx = MEMBERSHIP_FX[criterion]
-        for category, interval in membership_fx.items():
-            if preference == category:
-                min_val, max_val = interval
-                pet_value = pet[criterion]
-                if pet_value >= min_val and pet_value <= max_val:
-                    score += 1
+        # get the interval for each criteria
+        min_val, max_val = MEMBERSHIP_FX[criterion][preference]
+        pet_value = pet[criterion]
+        if pet_value >= min_val and pet_value <= max_val:
+            score += 1
     return round(score/len(adopter_preferences), decimal_places_accuracy)
 
 def calc_all_pet_suitability(situation:dict[Criteria, str]):
